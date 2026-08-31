@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ShowLockr UI Preview</title>
+  <style>
+    :root {
+      --bg: #f7f7f8;
+      --panel: #ffffff;
+      --panel-2: #fbfbfc;
+      --text: #18181b;
+      --muted: #71717a;
+      --line: #e4e4e7;
+      --line-2: #d4d4d8;
+      --dark: #09090b;
+      --soft: #f4f4f5;
+      --success: #166534;
+      --success-bg: #dcfce7;
+      --warn: #92400e;
+      --warn-bg: #fef3c7;
+      --danger: #991b1b;
+      --danger-bg: #fee2e2;
+      --info: #1e3a8a;
+      --info-bg: #dbeafe;
+      --brand: #111827;
+      --shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
+      --shadow-sm: 0 10px 25px rgba(15, 23, 42, 0.06);
+      --radius: 18px;
+      --radius-sm: 12px;
+      --font: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top left, rgba(17, 24, 39, 0.10), transparent 32%),
+        linear-gradient(180deg, #fbfbfc 0%, var(--bg) 40%, #f3f4f6 100%);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.35;
+    }
+    .page {
+      width: min(1480px, calc(100vw - 36px));
+      margin: 28px auto 48px;
+    }
+    .preview-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      align-items: flex-end;
+      margin-bottom: 22px;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.85);
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      color: #3f3f46;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 12px;
+    }
+    h1 { font-size: 42px; letter-spacing: -0.04em; margin: 0; }
+    .subtitle { color: var(--muted); max-width: 760px; margin-top: 8px; font-size: 16px; }
+    .header-meta { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+    .pill { border: 1px solid var(--line); background: rgba(255,255,255,0.82); padding: 8px 11px; border-radius: 999px; font-size: 12px; color: #3f3f46; }
+
+    .board {
+      display: grid;
+      grid-template-columns: 1.18fr 0.82fr;
+      gap: 20px;
+    }
+    .screen {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-height: 200px;
+    }
+    .screen-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(250,250,250,0.88);
+    }
+    .screen-title strong { font-size: 14px; letter-spacing: -0.01em; }
+    .screen-title span { font-size: 12px; color: var(--muted); }
+    .browser-dots { display: flex; gap: 6px; }
+    .browser-dots i { width: 9px; height: 9px; border-radius: 999px; background: #d4d4d8; display: block; }
+    .app-layout { display: grid; grid-template-columns: 230px 1fr; min-height: 790px; }
+    .sidebar {
+      background: #0b0b0f;
+      color: white;
+      padding: 18px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -0.03em; font-size: 18px; }
+    .logo-mark { width: 32px; height: 32px; border-radius: 10px; background: white; color: #0b0b0f; display: grid; place-items: center; font-weight: 900; }
+    .nav { display: grid; gap: 5px; }
+    .nav a { color: #d4d4d8; text-decoration: none; padding: 10px 11px; border-radius: 10px; display: flex; gap: 10px; align-items: center; font-size: 13px; }
+    .nav a.active, .nav a:hover { background: rgba(255,255,255,0.11); color: white; }
+    .nav .dot { width: 6px; height: 6px; border-radius: 999px; background: currentColor; opacity: 0.7; }
+    .side-card { margin-top: auto; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 14px; }
+    .side-card b { display:block; font-size: 13px; margin-bottom: 5px; }
+    .side-card p { margin:0; font-size: 12px; color: #d4d4d8; }
+    .app-main { padding: 20px; background: #fbfbfc; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 18px; }
+    .topbar h2 { margin: 0; font-size: 24px; letter-spacing: -0.03em; }
+    .topbar .actions { display: flex; gap: 10px; align-items: center; }
+    .btn { border: 1px solid var(--line-2); background: white; color: var(--text); border-radius: 11px; padding: 10px 13px; font-size: 13px; font-weight: 700; box-shadow: 0 1px 0 rgba(0,0,0,0.03); }
+    .btn.primary { background: var(--dark); color: white; border-color: var(--dark); }
+    .btn.ghost { background: transparent; }
+    .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 14px; }
+    .card { background: white; border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow-sm); }
+    .kpi { padding: 15px; }
+    .kpi .label { color: var(--muted); font-size: 12px; margin-bottom: 8px; }
+    .kpi .value { font-size: 26px; letter-spacing: -0.04em; font-weight: 800; }
+    .kpi .trend { font-size: 12px; color: var(--success); margin-top: 5px; }
+    .split { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 14px; }
+    .section-head { display: flex; justify-content: space-between; align-items: center; padding: 15px 15px 0; }
+    .section-head h3 { margin:0; font-size: 16px; letter-spacing: -0.02em; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { padding: 12px 14px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
+    th { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; }
+    tr:last-child td { border-bottom: 0; }
+    .status { display: inline-flex; align-items: center; gap: 6px; padding: 5px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+    .status.confirmed { color: var(--success); background: var(--success-bg); }
+    .status.waiting { color: var(--warn); background: var(--warn-bg); }
+    .status.risk { color: var(--danger); background: var(--danger-bg); }
+    .status.info { color: var(--info); background: var(--info-bg); }
+    .form-grid { padding: 14px; display: grid; gap: 12px; }
+    .row2 { display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    label { font-size: 12px; color: #52525b; font-weight: 700; display: block; margin-bottom: 6px; }
+    .input { height: 40px; border: 1px solid var(--line-2); border-radius: 10px; background: white; padding: 10px; font-size: 13px; color: #27272a; display: flex; align-items: center; justify-content: space-between; }
+    .textarea { height: 70px; border: 1px solid var(--line-2); border-radius: 10px; background: white; padding: 10px; font-size: 13px; color: #71717a; }
+    .progress { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; padding: 16px; }
+    .step { border: 1px solid var(--line); border-radius: 13px; background: var(--panel-2); padding: 12px; min-height: 76px; }
+    .step b { font-size: 12px; display: block; margin-bottom: 4px; }
+    .step span { color: var(--muted); font-size: 11px; }
+    .step.done { border-color: #86efac; background: #f0fdf4; }
+    .step.active { border-color: #facc15; background: #fefce8; }
+
+    .landing { padding: 0; }
+    .landing-nav { display:flex; align-items:center; justify-content:space-between; padding: 18px 22px; border-bottom: 1px solid var(--line); }
+    .links { display:flex; gap: 18px; color: var(--muted); font-size: 13px; align-items:center; }
+    .landing-hero { display:grid; grid-template-columns: 1.06fr 0.94fr; gap: 28px; padding: 42px 34px; align-items:center; }
+    .landing-hero h2 { font-size: 46px; line-height: 1.02; letter-spacing: -0.055em; margin: 0 0 14px; }
+    .landing-hero p { color: var(--muted); margin: 0 0 22px; max-width: 560px; font-size: 16px; }
+    .hero-actions { display:flex; gap: 10px; margin-bottom: 22px; }
+    .trust-row { display:flex; gap: 10px; flex-wrap: wrap; }
+    .mini-pill { border: 1px solid var(--line); border-radius: 999px; padding: 7px 10px; font-size: 12px; background: white; color: #52525b; }
+    .hero-card { border: 1px solid var(--line); border-radius: 20px; padding: 18px; background: #fff; box-shadow: var(--shadow); }
+    .mini-board { display:grid; gap:10px; }
+    .mini-row { display:flex; justify-content:space-between; align-items:center; gap:12px; border: 1px solid var(--line); border-radius: 13px; padding: 11px; background: #fafafa; }
+    .mini-row b { font-size: 13px; }
+    .mini-row span { color: var(--muted); font-size: 12px; }
+    .features { display:grid; grid-template-columns: repeat(4,1fr); gap: 12px; padding: 0 34px 32px; }
+    .feature { border: 1px solid var(--line); border-radius: 15px; padding: 16px; background:#fff; }
+    .feature b { display:block; margin-bottom: 6px; font-size: 13px; }
+    .feature p { margin:0; color:var(--muted); font-size: 12px; }
+
+    .phone-shell {
+      width: 360px;
+      margin: 18px auto 22px;
+      border: 10px solid #18181b;
+      border-radius: 34px;
+      background: #fff;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .phone-notch { width: 120px; height: 18px; background: #18181b; border-radius: 0 0 14px 14px; margin: 0 auto; }
+    .phone-content { padding: 18px; }
+    .mobile-brand { display:flex; align-items:center; gap:10px; font-weight:800; margin-bottom: 18px; }
+    .summary-card { border:1px solid var(--line); border-radius:18px; padding:16px; background:#fafafa; margin-bottom: 12px; }
+    .summary-card h3 { margin:0 0 10px; font-size:18px; letter-spacing:-0.03em; }
+    .line-item { display:flex; justify-content:space-between; gap:12px; border-top:1px solid var(--line); padding:10px 0; font-size:13px; }
+    .line-item:first-of-type { border-top:0; }
+    .line-item span { color: var(--muted); }
+    .checkbox-row { display:flex; gap:10px; align-items:flex-start; font-size:12px; color:#3f3f46; margin: 10px 0; }
+    .box { width:18px; height:18px; border:1px solid var(--line-2); border-radius:5px; flex:0 0 auto; background:white; }
+    .pay-card { border:1px solid var(--line-2); border-radius:14px; padding:12px; background:white; margin-top:12px; }
+    .full-btn { width:100%; text-align:center; border-radius: 12px; padding: 12px; font-weight:800; background:#111827; color:white; margin-top: 12px; font-size: 13px; }
+
+    .right-col { display:grid; gap:20px; }
+    .compact-grid { display:grid; grid-template-columns: 1fr 1fr; gap: 20px; grid-column: 1 / -1; }
+    .admin-page { padding: 16px; background:#fbfbfc; }
+    .two-col-page { display:grid; grid-template-columns: 0.98fr 1.02fr; gap:14px; }
+    .list-item { border: 1px solid var(--line); background:white; border-radius: 14px; padding: 13px; display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom: 10px; }
+    .list-item b { font-size: 13px; }
+    .list-item small { display:block; color:var(--muted); margin-top:3px; }
+    .chart { height: 170px; border:1px solid var(--line); border-radius:16px; background: linear-gradient(180deg, #fff, #fafafa); position:relative; overflow:hidden; }
+    .chart svg { width:100%; height:100%; }
+    .bars { display:flex; align-items:flex-end; gap:9px; height:150px; padding: 18px; }
+    .bar { flex:1; background: #18181b; border-radius:8px 8px 0 0; opacity:0.78; min-height:22px; }
+    .footer-note { margin-top: 20px; color: var(--muted); font-size: 12px; text-align: center; }
+
+    @media (max-width: 1100px) {
+      .board, .compact-grid, .landing-hero, .two-col-page { grid-template-columns: 1fr; }
+      .kpis { grid-template-columns: repeat(2, 1fr); }
+      .split { grid-template-columns: 1fr; }
+      .app-layout { grid-template-columns: 1fr; }
+      .sidebar { min-height: auto; }
+      .features { grid-template-columns: repeat(2,1fr); }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="preview-header">
+      <div>
+        <div class="eyebrow">UI preview · Next.js + Tailwind + shadcn/ui style</div>
+        <h1>ShowLockr appointment SaaS preview</h1>
+        <div class="subtitle">A polished static preview for a deposit-secured booking product serving tattoo studios, nail/spa businesses, hair salons, med spas, tutors, photographers, and other appointment-based providers.</div>
+      </div>
+      <div class="header-meta">
+        <div class="pill">Mobile-first customer checkout</div>
+        <div class="pill">Desktop business dashboard</div>
+        <div class="pill">Policy + deposit + consent</div>
+      </div>
+    </header>
+
+    <section class="board">
+      <article class="screen landing" style="grid-column: 1 / -1;">
+        <div class="screen-title"><strong>Marketing / landing page</strong><span>public website preview</span></div>
+        <div class="landing-nav">
+          <div class="logo"><div class="logo-mark">S</div> ShowLockr</div>
+          <div class="links"><span>Features</span><span>Pricing</span><span>Industries</span><span>Docs</span><button class="btn primary">Start free</button></div>
+        </div>
+        <div class="landing-hero">
+          <div>
+            <h2>Make every appointment real before it touches your calendar.</h2>
+            <p>Collect deposits, capture cancellation-policy acceptance, and send consent-based reminders so clients confirm before the slot is protected.</p>
+            <div class="hero-actions"><button class="btn primary">Create deposit hold</button><button class="btn">View demo</button></div>
+            <div class="trust-row"><span class="mini-pill">Hair salons</span><span class="mini-pill">Nails & spas</span><span class="mini-pill">Tattoo studios</span><span class="mini-pill">Tutors</span><span class="mini-pill">Photographers</span></div>
+          </div>
+          <div class="hero-card">
+            <div class="mini-board">
+              <div class="mini-row"><div><b>Maria Lopez · Color appointment</b><span>Tomorrow 2:00 PM · $75 deposit</span></div><span class="status waiting">Awaiting deposit</span></div>
+              <div class="mini-row"><div><b>Jamie Lee · Gel manicure</b><span>Today 11:30 AM · policy accepted</span></div><span class="status confirmed">Confirmed</span></div>
+              <div class="mini-row"><div><b>Ben Carter · Consultation</b><span>SMS consent missing · no reminders</span></div><span class="status risk">At risk</span></div>
+              <div class="mini-row"><div><b>Open slot refill</b><span>3 waitlist matches for Friday 4:00 PM</span></div><span class="status info">Ready</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="features">
+          <div class="feature"><b>Deposit holds</b><p>Create a temporary hold and only confirm after payment.</p></div>
+          <div class="feature"><b>Policy acceptance</b><p>Store exact terms, timestamp, IP, and appointment ID.</p></div>
+          <div class="feature"><b>Consent-based SMS</b><p>Never send reminders until the customer opts in.</p></div>
+          <div class="feature"><b>Waitlist refill</b><p>Offer canceled slots to qualified waitlist clients.</p></div>
+        </div>
+      </article>
+
+      <article class="screen" style="grid-column: 1 / -1;">
+        <div class="screen-title"><strong>Main business dashboard</strong><span>desktop app preview</span><div class="browser-dots"><i></i><i></i><i></i></div></div>
+        <div class="app-layout">
+          <aside class="sidebar">
+            <div class="logo"><div class="logo-mark">S</div> ShowLockr</div>
+            <nav class="nav">
+              <a class="active"><span class="dot"></span>Dashboard</a>
+              <a><span class="dot"></span>Booking Holds</a>
+              <a><span class="dot"></span>Calendar</a>
+              <a><span class="dot"></span>Customers</a>
+              <a><span class="dot"></span>Services & Policies</a>
+              <a><span class="dot"></span>Providers / Staff</a>
+              <a><span class="dot"></span>Payments</a>
+              <a><span class="dot"></span>Waitlist</a>
+              <a><span class="dot"></span>Analytics</a>
+              <a><span class="dot"></span>Settings</a>
+            </nav>
+            <div class="side-card"><b>Protection score: 86%</b><p>28 of 32 appointments this week have deposit + policy + consent.</p></div>
+          </aside>
+          <section class="app-main">
+            <div class="topbar">
+              <div><h2>Good morning, Sarah</h2><div style="color:var(--muted);font-size:13px;">Today’s appointment protection snapshot</div></div>
+              <div class="actions"><button class="btn">Export</button><button class="btn primary">+ Create booking hold</button></div>
+            </div>
+            <div class="kpis">
+              <div class="card kpi"><div class="label">Upcoming</div><div class="value">32</div><div class="trend">+12% this week</div></div>
+              <div class="card kpi"><div class="label">Awaiting deposits</div><div class="value">8</div><div class="trend" style="color:var(--warn);">Needs action</div></div>
+              <div class="card kpi"><div class="label">Confirmed</div><div class="value">24</div><div class="trend">Policy + deposit captured</div></div>
+              <div class="card kpi"><div class="label">Recovered revenue</div><div class="value">$1,240</div><div class="trend">From deposits/refill</div></div>
+            </div>
+            <div class="split">
+              <div class="card">
+                <div class="section-head"><h3>Booking holds</h3><button class="btn ghost">View all</button></div>
+                <table>
+                  <thead><tr><th>Client</th><th>Service</th><th>Provider</th><th>Time</th><th>Status</th></tr></thead>
+                  <tbody>
+                    <tr><td>Maria Lopez</td><td>Hair color</td><td>Ana</td><td>Today 2:00 PM</td><td><span class="status waiting">Awaiting deposit</span></td></tr>
+                    <tr><td>Jamie Lee</td><td>Gel manicure</td><td>Mia</td><td>Today 4:30 PM</td><td><span class="status confirmed">Confirmed</span></td></tr>
+                    <tr><td>Noah King</td><td>Tattoo consult</td><td>Rae</td><td>Fri 1:00 PM</td><td><span class="status info">Policy accepted</span></td></tr>
+                    <tr><td>Ben Carter</td><td>Massage</td><td>Tyler</td><td>Fri 5:00 PM</td><td><span class="status risk">At risk</span></td></tr>
+                    <tr><td>Ava Patel</td><td>Facial</td><td>Lexi</td><td>Sat 10:30 AM</td><td><span class="status confirmed">Confirmed</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="card">
+                <div class="section-head"><h3>Create booking hold</h3><span style="font-size:12px;color:var(--muted);">quick action</span></div>
+                <div class="form-grid">
+                  <div class="row2"><div><label>Client name</label><div class="input">Maria Lopez</div></div><div><label>Contact</label><div class="input">maria@email.com</div></div></div>
+                  <div class="row2"><div><label>Service</label><div class="input">Hair color <span>⌄</span></div></div><div><label>Provider</label><div class="input">Ana <span>⌄</span></div></div></div>
+                  <div class="row2"><div><label>Date</label><div class="input">May 14, 2026</div></div><div><label>Time</label><div class="input">2:00 PM</div></div></div>
+                  <div class="row2"><div><label>Deposit</label><div class="input">$75.00</div></div><div><label>Policy</label><div class="input">48-hour policy <span>⌄</span></div></div></div>
+                  <div><label>Internal notes</label><div class="textarea">Color correction consult. Client must send reference photo before arrival.</div></div>
+                  <button class="btn primary">Create confirmation link</button>
+                </div>
+              </div>
+            </div>
+            <div class="progress">
+              <div class="step done"><b>1. Hold created</b><span>Temporary slot reserved.</span></div>
+              <div class="step active"><b>2. Awaiting client</b><span>Link sent manually or by email.</span></div>
+              <div class="step"><b>3. Policy accepted</b><span>Terms stored with proof.</span></div>
+              <div class="step"><b>4. Deposit paid</b><span>Stripe confirms payment.</span></div>
+              <div class="step"><b>5. Appointment real</b><span>Reminders scheduled.</span></div>
+            </div>
+          </section>
+        </div>
+      </article>
+
+      <div class="right-col">
+        <article class="screen">
+          <div class="screen-title"><strong>Customer confirmation page</strong><span>mobile-first public link</span></div>
+          <div class="phone-shell">
+            <div class="phone-notch"></div>
+            <div class="phone-content">
+              <div class="mobile-brand"><div class="logo-mark">S</div> ShowLockr</div>
+              <div class="summary-card">
+                <h3>Confirm your appointment</h3>
+                <div class="line-item"><span>Business</span><b>Glow Studio</b></div>
+                <div class="line-item"><span>Service</span><b>Gel manicure</b></div>
+                <div class="line-item"><span>Provider</span><b>Mia</b></div>
+                <div class="line-item"><span>Date</span><b>May 14, 4:30 PM</b></div>
+                <div class="line-item"><span>Deposit</span><b>$35.00</b></div>
+              </div>
+              <div class="summary-card">
+                <h3>Policy</h3>
+                <p style="font-size:12px;color:var(--muted);margin:0 0 10px;">Cancel or reschedule at least 24 hours before your appointment. Late cancellations and no-shows may forfeit the deposit.</p>
+                <div class="checkbox-row"><div class="box"></div><div>I agree to the cancellation and no-show policy.</div></div>
+                <div class="checkbox-row"><div class="box"></div><div>Send me appointment text reminders. Reply STOP to opt out.</div></div>
+              </div>
+              <div class="pay-card"><label>Card number</label><div class="input">4242 4242 4242 4242</div><div class="row2" style="margin-top:8px;"><div class="input">MM / YY</div><div class="input">CVC</div></div></div>
+              <div class="full-btn">Pay $35 & confirm</div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <article class="screen">
+        <div class="screen-title"><strong>Booking hold detail</strong><span>status + link preview</span></div>
+        <div class="admin-page">
+          <div class="topbar"><div><h2>Hold #BH-1042</h2><div style="font-size:13px;color:var(--muted);">Maria Lopez · Hair color · Ana</div></div><button class="btn">Copy link</button></div>
+          <div class="progress" style="grid-template-columns:1fr; padding:0; gap:9px;">
+            <div class="step done"><b>Hold created</b><span>May 8, 2026 · 10:21 AM</span></div>
+            <div class="step active"><b>Awaiting deposit</b><span>Confirmation link copied by business.</span></div>
+            <div class="step"><b>Policy accepted</b><span>Not completed yet.</span></div>
+            <div class="step"><b>Deposit paid</b><span>Stripe webhook pending.</span></div>
+            <div class="step"><b>Confirmed</b><span>Calendar event and reminders created.</span></div>
+          </div>
+          <div class="summary-card" style="margin-top:14px;"><h3>Confirmation link</h3><div class="input">https://showlockr.com/confirm/hld_8fy...</div></div>
+        </div>
+      </article>
+
+      <div class="compact-grid">
+        <article class="screen">
+          <div class="screen-title"><strong>Services & policies</strong><span>admin setup</span></div>
+          <div class="admin-page two-col-page">
+            <div>
+              <div class="section-head" style="padding:0 0 10px;"><h3>Services</h3><button class="btn">+ New</button></div>
+              <div class="list-item"><div><b>Gel manicure</b><small>45 min · $65 · $35 deposit</small></div><span>⋯</span></div>
+              <div class="list-item"><div><b>Hair color</b><small>120 min · $220 · $75 deposit</small></div><span>⋯</span></div>
+              <div class="list-item"><div><b>Tattoo consultation</b><small>30 min · $0 · $50 deposit</small></div><span>⋯</span></div>
+              <div class="list-item"><div><b>Massage therapy</b><small>60 min · $110 · card on file</small></div><span>⋯</span></div>
+            </div>
+            <div>
+              <div class="section-head" style="padding:0 0 10px;"><h3>Policy templates</h3><button class="btn">+ New</button></div>
+              <div class="list-item"><div><b>Standard 24-hour</b><small>Late cancel keeps deposit</small></div><span class="status confirmed">Default</span></div>
+              <div class="list-item"><div><b>Strict 48-hour</b><small>No-show forfeits deposit</small></div><span>⋯</span></div>
+              <div class="list-item"><div><b>Full prepay</b><small>Required for risky clients</small></div><span>⋯</span></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="screen">
+          <div class="screen-title"><strong>Providers / staff</strong><span>multi-provider setup</span></div>
+          <div class="admin-page">
+            <div class="list-item"><div><b>Ana Rivera</b><small>Hair color · cuts · corrections</small></div><span class="status confirmed">Available</span></div>
+            <div class="list-item"><div><b>Mia Chen</b><small>Nails · gel · extensions</small></div><span class="status confirmed">Available</span></div>
+            <div class="list-item"><div><b>Rae Kim</b><small>Tattoo · flash · consults</small></div><span class="status waiting">Limited</span></div>
+            <div class="list-item"><div><b>Tyler West</b><small>Massage · deep tissue</small></div><span class="status info">Off today</span></div>
+            <div class="summary-card"><h3>Provider rules</h3><p style="font-size:12px;color:var(--muted);margin:0;">Each provider can have services, availability, deposit rules, and reminder preferences.</p></div>
+          </div>
+        </article>
+
+        <article class="screen">
+          <div class="screen-title"><strong>Customers</strong><span>reliability history</span></div>
+          <div class="admin-page two-col-page">
+            <div>
+              <div class="input" style="margin-bottom:10px;">Search customers…</div>
+              <div class="list-item"><div><b>Jamie Lee</b><small>8 bookings · reliable</small></div><span>›</span></div>
+              <div class="list-item"><div><b>Ben Carter</b><small>1 no-show · deposit required</small></div><span>›</span></div>
+              <div class="list-item"><div><b>Maria Lopez</b><small>2 bookings · awaiting deposit</small></div><span>›</span></div>
+            </div>
+            <div class="summary-card" style="margin:0;"><h3>Ben Carter</h3><div class="line-item"><span>No-shows</span><b>1</b></div><div class="line-item"><span>Late cancels</span><b>2</b></div><div class="line-item"><span>Rule</span><b>Full deposit</b></div><p style="font-size:12px;color:var(--muted);">Only behavior-based reliability notes; no sensitive attributes.</p></div>
+          </div>
+        </article>
+
+        <article class="screen">
+          <div class="screen-title"><strong>Analytics</strong><span>operator view</span></div>
+          <div class="admin-page">
+            <div class="kpis" style="grid-template-columns:repeat(3,1fr);"><div class="card kpi"><div class="label">Deposit conversion</div><div class="value">74%</div></div><div class="card kpi"><div class="label">No-show rate</div><div class="value">4.8%</div></div><div class="card kpi"><div class="label">Slots refilled</div><div class="value">13</div></div></div>
+            <div class="chart"><svg viewBox="0 0 500 170" preserveAspectRatio="none"><polyline points="0,140 70,120 140,132 210,88 280,92 350,58 430,72 500,40" fill="none" stroke="#18181b" stroke-width="5" stroke-linecap="round"/><line x1="0" y1="140" x2="500" y2="140" stroke="#e4e4e7"/><line x1="0" y1="100" x2="500" y2="100" stroke="#e4e4e7"/><line x1="0" y1="60" x2="500" y2="60" stroke="#e4e4e7"/></svg></div>
+          </div>
+        </article>
+      </div>
+    </section>
+    <div class="footer-note">Static UI preview artifact. Built to communicate layout, UX, and product workflow before implementation in Next.js + shadcn/ui.</div>
+  </main>
+</body>
+</html>
